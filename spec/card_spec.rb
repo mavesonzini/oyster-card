@@ -16,6 +16,9 @@ describe Oystercard do
       expect(subject.in_journey?).to eq false
     end
 
+    it 'starts with no journeys' do
+      expect(subject.journeys).to be_empty
+    end
   end
 
   it { is_expected.to respond_to(:touch_in).with(1).argument }
@@ -23,6 +26,8 @@ describe Oystercard do
   it { is_expected.to respond_to(:touch_out).with(1).argument }
 
   it { is_expected.to respond_to(:entry_station)}
+
+  it { is_expected.to respond_to(:journeys)}
 
   describe "#top_up" do
 
@@ -96,6 +101,13 @@ describe Oystercard do
 
     end
 
+    describe "#journeys" do
+
+      it "should save a complete journey" do
+        subject.touch_out(exit_station)
+        expect(subject.journeys[entry_station]).to eq exit_station
+      end
+    end
  end
 
 end
