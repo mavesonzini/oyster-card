@@ -3,6 +3,7 @@ require 'card.rb'
 describe Oystercard do
 
   subject(:card) { described_class.new }
+  let(:station) { double :station }
 
   describe "#initialization" do
 
@@ -15,6 +16,10 @@ describe Oystercard do
     end
 
   end
+
+  it { is_expected.to respond_to(:touch_in).with(1).argument }
+
+  it { is_expected.to respond_to(:entry_station)}
 
   describe "#top_up" do
 
@@ -33,7 +38,7 @@ describe Oystercard do
   describe "#touch_in" do
 
     it "should raise error if balance is below 1 pound" do
-      expect{subject.touch_in}.to raise_error("Cannot touch in: not enough funds")
+      expect{subject.touch_in(station)}.to raise_error("Cannot touch in: not enough funds")
     end
 
   end
@@ -43,13 +48,17 @@ describe Oystercard do
 
     before do
       subject.top_up(described_class::MAXIMUM_BALANCE)
-      subject.touch_in
+      subject.touch_in(station)
     end
 
     describe "#touch_in" do
 
       it "should test that card is in journey" do
         expect(subject).to be_in_journey
+      end
+
+      it "should save the station to entry_station" do
+        expect(subject.entry_station).to eq station
       end
 
     end
@@ -62,12 +71,16 @@ describe Oystercard do
       end
 
       it "should test that minimum value is deducted from card at touch out" do
-        subject.touch_out
         expect{ subject.touch_out }.to change{ subject.balance }.by(-described_class::MINIMUM_BALANCE)
+      end
+
+      it "should set entry station to nil" do
+        subject.touch_out
+        expect(subject.entry_station).to eq nil
       end
 
     end
 
-end
+ end
 
 end
