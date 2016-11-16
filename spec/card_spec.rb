@@ -3,7 +3,8 @@ require 'card.rb'
 describe Oystercard do
 
   subject(:card) { described_class.new }
-  let(:station) { double :station }
+  let(:entry_station) { double :station }
+  let(:exit_station) { double :station }
 
   describe "#initialization" do
 
@@ -18,6 +19,8 @@ describe Oystercard do
   end
 
   it { is_expected.to respond_to(:touch_in).with(1).argument }
+
+  it { is_expected.to respond_to(:touch_out).with(1).argument }
 
   it { is_expected.to respond_to(:entry_station)}
 
@@ -38,7 +41,7 @@ describe Oystercard do
   describe "#touch_in" do
 
     it "should raise error if balance is below 1 pound" do
-      expect{subject.touch_in(station)}.to raise_error("Cannot touch in: not enough funds")
+      expect{subject.touch_in(entry_station)}.to raise_error("Cannot touch in: not enough funds")
     end
 
   end
@@ -48,7 +51,7 @@ describe Oystercard do
 
     before do
       subject.top_up(described_class::MAXIMUM_BALANCE)
-      subject.touch_in(station)
+      subject.touch_in(entry_station)
     end
 
     describe "#touch_in" do
@@ -58,24 +61,36 @@ describe Oystercard do
       end
 
       it "should save the station to entry_station" do
-        expect(subject.entry_station).to eq station
+        expect(subject.entry_station).to eq entry_station
+      end
+
+      it 'should set the exit_station to nil' do
+        subject.touch_out(exit_station)
+        subject.touch_in(entry_station)
+        expect(subject.exit_station).to eq nil
       end
 
     end
 
     describe "#touch_out" do
 
+      it 'should save the station to exit_station' do
+        subject.touch_out(exit_station)
+        expect(subject.exit_station).to eq exit_station
+
+      end
+
       it "Test that card can be touched out" do
-        subject.touch_out
+        subject.touch_out(exit_station)
         expect(subject).not_to be_in_journey
       end
 
       it "should test that minimum value is deducted from card at touch out" do
-        expect{ subject.touch_out }.to change{ subject.balance }.by(-described_class::MINIMUM_BALANCE)
+        expect{ subject.touch_out(exit_station) }.to change{ subject.balance }.by(-described_class::MINIMUM_BALANCE)
       end
 
       it "should set entry station to nil" do
-        subject.touch_out
+        subject.touch_out(exit_station)
         expect(subject.entry_station).to eq nil
       end
 
