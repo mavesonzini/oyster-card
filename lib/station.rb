@@ -7,4 +7,7 @@ attr_reader :name, :zone
     @zone = zone
   end
 
+  def name
+  end
+
 end
