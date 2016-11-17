@@ -1,6 +1,7 @@
 class Journey
 
   PENALTY = 6
+
   attr_reader :entry_station, :exit_station
 
   def start_journey(entry_station)
