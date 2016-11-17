@@ -2,10 +2,10 @@ require_relative 'journey.rb'
 
 class Oystercard
 
-  attr_reader :balance, :entry_station, :journeys
+  MAXIMUM_BALANCE = 90
+  MINIMUM_BALANCE = 1
 
-    MAXIMUM_BALANCE = 90
-    MINIMUM_BALANCE = 1
+  attr_reader :balance, :entry_station, :journeys
 
     def initialize
       @balance = 0
@@ -31,9 +31,9 @@ class Oystercard
        @entry_station = nil
      end
 
-     def in_journey?
-       !!entry_station
-     end
+    def in_journey?
+     !!entry_station
+    end
 
      private
 

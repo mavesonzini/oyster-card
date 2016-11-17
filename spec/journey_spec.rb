@@ -27,8 +27,25 @@ describe Journey do
     it 'sets exit station' do
       subject.end_journey(exit_station)
       #####
-
     end
+  end
+
+  describe "#fare" do
+    it { is_expected.to respond_to(:fare) }
+
+    it "returns the minimum fare" do
+      subject.start_journey("aldgate")
+      subject.end_journey("kingsx")
+      expect(subject.fare).to eq Oystercard::MINIMUM_BALANCE
+    end
+
+    it "returns a penalty fare of 6 if you do not either start your journey or end your journey" do
+      subject.start_journey("aldgate")
+      subject.end_journey(nil)
+      expect(subject.fare).to eq Journey::PENALTY
+    end
+
+  end
 
 
 

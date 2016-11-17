@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 require 'station.rb'
 
 describe Station do
@@ -13,17 +12,10 @@ describe Station do
     it 'has a zone' do
       expect(subject.zone).to eq 1
     end
+
+    it "should respond to name" do
+      expect(station).to respond_to :name
+    end
   end
-=======
-require "station"
-
-describe Station do
-
-  subject(:station) {described_class.new}
-
-  it "should respond to name" do
-    expect(station).to respond_to :name
-  end
-
->>>>>>> 167b87d90f10b4eb1cde103e348fe79ce5f0f7c1
+  
 end
